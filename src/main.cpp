@@ -49,13 +49,6 @@ int main ()
 	/* Player Initilization */
 	Champion masterYi (championName, 2, 12, 0.5, 0.5); masterYi.sprite.setPosition(1024, 534);
 
-
-	/* Kennen's 'e' ability Initilization */
-	timer rush; sf::CircleShape rushKennen;
-	rushKennen.setRadius(masterYi.sprite.getSize().x *2 +3);
-	rushKennen.setFillColor(sf::Color::Yellow);
-
-
 	sf::RectangleShape playerBox (sf::Vector2f(100,100));
 
 	sf::View game (sf::FloatRect(1024, 534, 800, 600));
@@ -94,7 +87,6 @@ int main ()
 
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
 		{
-			//destinationX = (sf::Mouse::getPosition(App).x + game.getCenter().x - game.getSize().x/2)*factorX; destinationY = (sf::Mouse::getPosition(App).y+ game.getCenter().x - game.getSize().x/2)*factorY;
 			destinationX = sf::Mouse::getPosition(App).x; destinationY = sf::Mouse::getPosition(App).y;
 			angle = (atan2(masterYi.getPosition().y - destinationY, masterYi.getPosition().x - destinationX) - 3.14159);
 			target.setPosition(destinationX, destinationY);
@@ -137,24 +129,6 @@ int main ()
 			}
 			sf::sleep(sf::seconds(.01));
 		}
-
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-		{
-			//game.setCenter(game.getCenter().x+5, game.getCenter().y);
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
-		{
-			rush.reset();
-
-			if (rush.elapsed_seconds() < 3)
-			{
-				modifier = 4;
-			}else
-			{
-				modifier = 0;
-			}
-		}
-
 		if (moving && !target.getGlobalBounds().intersects(playerBox.getGlobalBounds()))
 		{
 			float x = (float)cos((double)angle)*(masterYi.getMovementSpeed()+modifier);//The multiplication is to imply the movement speed.
@@ -193,8 +167,7 @@ int main ()
 		App.setView(game);
 		mini.setPosition(sf::Vector2f(game.getCenter().x + 200, game.getCenter().y + 100));
 
-		sCursor.setPosition(sf::Mouse::getPosition(App).x /*+ game.getCenter().x - game.getSize().x/2)*factorX*/, sf::Mouse::getPosition(App).y /*+ game.getCenter().y - game.getSize().x/2)*factorY)*/);
-		rushKennen.setPosition(masterYi.getPosition());
+		sCursor.setPosition(sf::Mouse::getPosition(App).x , sf::Mouse::getPosition(App).y);
 		App.clear(sf::Color(255,255,255));
 		App.draw(sMap);
 		mini.draw(App);
@@ -211,10 +184,6 @@ int main ()
 
 			lFillBars[i].draw(App);
 			lMinions[i].draw(App);
-		}
-		if (modifier > 0)
-		{
-			App.draw(rushKennen);
 		}
 		App.draw(sCursor);
 		App.display();

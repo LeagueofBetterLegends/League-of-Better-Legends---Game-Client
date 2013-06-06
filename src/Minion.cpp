@@ -6,6 +6,9 @@
  */
 
 #include "Minion.h"
+#include "utility/file.h"
+#include "settingsBase.h"
+
 #include <math.h>
 
 Minion::Minion(sf::Vector2f position, int team)
@@ -13,20 +16,24 @@ Minion::Minion(sf::Vector2f position, int team)
 	sf::Texture* temp = new sf::Texture;
 	sf::Image iTemp;
 
+	settingsBase sb;
+
+	File fPath ("Minion/" + )
 	if (team == 1)
 	{
-		iTemp.loadFromFile("minion.png");
+		iTemp.loadFromFile("Minion/minion.png");
 	}else if (team == 2)
 	{
-		iTemp.loadFromFile("blueMinion.png");
+		iTemp.loadFromFile("Minion/blueMinion.png");
 	}
 
 	iTemp.createMaskFromColor(iTemp.getPixel(0,0));
 	temp->loadFromImage(iTemp);
+
 	sprite.setSize(sf::Vector2f(temp->getSize().x, temp->getSize().y));
 	sprite.setTexture(temp);
-	//sprite.setScale(2, 2);
 	sprite.setPosition(position);
+
 	pPosition = position;
 	pTeam = team;
 	pHealth = 4;
@@ -39,7 +46,7 @@ Minion::Minion(sf::Vector2f position, int team)
 Minion::Minion (sf::Vector2f position, int team, bool isSuper, int health)
 {
 	sf::Texture* temp = new sf::Texture;
-	sf::Image iTemp; iTemp.loadFromFile("minion.png"); iTemp.createMaskFromColor(iTemp.getPixel(0,0));
+	sf::Image iTemp; iTemp.loadFromFile("Minion/minion.png"); iTemp.createMaskFromColor(iTemp.getPixel(0,0));
 	temp->loadFromImage(iTemp);
 	sprite.setSize(sf::Vector2f(temp->getSize().x, temp->getSize().y));
 	sprite.setTexture(temp);

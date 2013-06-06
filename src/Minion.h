@@ -38,6 +38,8 @@ public:
 
 	sf::CircleShape sight;
 
+	std::vector<sf::Vector2f> path;
+
 private:
 
 int pTeam;
