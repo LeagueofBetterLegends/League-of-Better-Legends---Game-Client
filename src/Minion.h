@@ -18,9 +18,13 @@ public:
 
 	int pMaxHealth;
 
+	int priority;
+
+	bool isVisible;
+
 	Minion (sf::Vector2f position, int team, bool isSuper, int health);
 
-	Minion (sf::Vector2f position, int team);
+	Minion (int team);
 
 	void draw (sf::RenderWindow &App);
 
@@ -32,19 +36,19 @@ public:
 
 	void isSeeing (Champion championToTarget); //Not descriptive
 
-	sf::RectangleShape sprite;
+	sf::RectangleShape sprite, destination;
 
 	sf::Vector2f pPosition;
 
 	sf::CircleShape sight;
 
-	std::vector<sf::Vector2f> path;
+	std::vector<sf::Vector2f>* path;
 
 private:
 
 int pTeam;
 bool pIsSuper, isAlive;
-int pHealth;
+int pHealth, curPath;
 
 private:
 

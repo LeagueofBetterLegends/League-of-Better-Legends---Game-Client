@@ -52,7 +52,6 @@ sf::Vector2f settingsBase::getVecFloatSetting (std::string toFind)
 	std::string line;
 	size_t found;
 	sf::Vector2f toReturn (0,0);
-
 	for (unsigned int i = 0; i < pSettingsFile.getLength(); i++)
 	{
 		line = pSettingsFile.getLine(i);
@@ -75,6 +74,32 @@ sf::Vector2f settingsBase::getVecFloatSetting (std::string toFind)
 	}
 
 	return toReturn;
+}
+
+void settingsBase::getVecFloatSetting (std::vector<sf::Vector2f>* toFill)
+{
+	pSettingsFile.read();
+	std::string line;
+	size_t found;
+	sf::Vector2f toReturn (0,0);
+
+	for (unsigned int i = 0; i < pSettingsFile.getLength(); i++)
+	{
+		line = pSettingsFile.getLine(i);
+		util convert;
+		found = line.find ("|");
+		if (found != std::string::npos)
+		{
+			std::string temp;
+			temp = line.substr(0, found);
+			std::cout << "Temp X: " << temp << "\n";
+			toReturn.x = convert.stringToInt(temp);
+			temp = line.substr(found+1, line.length());
+			std::cout << "Temp Y: " << temp << "\n";
+			toReturn.y = convert.stringToInt(temp);
+		}
+		toFill->push_back(sf::Vector2f(toReturn.x,toReturn.y));
+	}
 }
 
 bool settingsBase::getBoolSetting (std::string toFind)

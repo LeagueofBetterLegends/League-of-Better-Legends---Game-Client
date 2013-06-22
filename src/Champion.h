@@ -41,8 +41,11 @@ public:
 
 	int getTeam ();
 
+	void addAbility (); //Try to consider how this is gonna work?
+
 	sf::Texture* forward1; sf::Texture* forward2;
 	sf::Texture* backward1; sf::Texture* backward2;
+
 private:
 
 int pState;

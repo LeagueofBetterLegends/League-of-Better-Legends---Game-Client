@@ -15,6 +15,8 @@ public:
 
 	sf::Vector2f getVecFloatSetting (std::string toFind);
 
+	void getVecFloatSetting (std::vector<sf::Vector2f>* toFill);
+
 	bool getBoolSetting (std::string toFind);
 
 	File pSettingsFile;

@@ -8,7 +8,7 @@
 #include "Champion.h"
 
 
-Champion::Champion ()
+Champion::Champion () // This class is going to need some means of individually handling "Q,W,E,R"
 {
 }
 

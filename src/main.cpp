@@ -9,18 +9,21 @@
 #include "Minion.h"
 #include "timer.h"
 #include "FillBar.h"
+#include "RangedAttack.h"
 
 int main ()
 {
 	/* Application Initilization*/
-	settings settings ("settings.txt"); // Load the settings configuration
+	settings setting ("settings.txt"); // Load the settings configuration
 
-	sf::RenderWindow App (sf::VideoMode((int)settings.getResolution().x, (int)settings.getResolution().y, 32), "League of Better Legends - Game Client v.Test", sf::Style::Fullscreen);
+	sf::RenderWindow App (sf::VideoMode((int)setting.getResolution().x, (int)setting.getResolution().y, 32), "League of Better Legends - Game Client v.Test" /*sf::Closed*/);
 
-	if (settings.getFullScreen()) // By default this enables fullscreen (with the provided resolution from settings.txt)
+	if (setting.getFullScreen()) // By default this enables fullscreen (with the provided resolution from settings.txt)
 	{
-		App.create(sf::VideoMode((int)settings.getResolution().x, (int)settings.getResolution().y, 32), "League of Better Legends - Game Client v.Test" , sf::Style::Fullscreen);
+		App.create(sf::VideoMode((int)setting.getResolution().x, (int)setting.getResolution().y, 32), "League of Better Legends - Game Client v.Test" /*, sf::Style::Fullscreen*/);
 	}
+
+	//sf::Vector2f scale (1440-800, 900-600);
 
 	settingsBase sb ("settings.txt");
 	std::string championName = sb.getStringSetting("Champion");
@@ -34,6 +37,7 @@ int main ()
 	App.setMouseCursorVisible(true);
 	sf::Texture cursor; cursor.loadFromFile("cursor.png");
 	sf::Sprite sCursor; sCursor.setTexture(cursor);
+	sCursor.setOrigin(9,12);
 
 	/* Map and Minimap Initilization */
 	sf::Texture map; sf::Texture *test = new sf::Texture;
@@ -59,12 +63,11 @@ int main ()
 	bool moving = false;
 	bool screenLock = true;
 	float destinationX = masterYi.getPosition().x; float destinationY = masterYi.getPosition().y;
-	factorX = game.getSize().x/App.getSize().x; factorY = game.getSize().y/App.getSize().y;
 	bool inFocus = false;
 	bool soundEnabled = true;
 	int minionTeam = 2;
 	//sf::Sound sound;
-	std::vector<Minion> lMinions; std::vector<FillBar> lFillBars;
+	std::vector<Minion> lMinions; std::vector<FillBar> lFillBars; std::vector<RangeAttack> lRangeAttacks;
 
  	while (App.isOpen())
 	{
@@ -91,6 +94,7 @@ int main ()
 			angle = (atan2(masterYi.getPosition().y - destinationY, masterYi.getPosition().x - destinationX) - 3.14159);
 			target.setPosition(destinationX, destinationY);
 			moving = true;
+			std::cout << masterYi.getPosition().x;
 
 			if (soundEnabled)
 			{
@@ -106,7 +110,7 @@ int main ()
 
 		}else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) /*&& sf::Keyboard::isKeyPressed(sf::Keyboard::RControl)*/)
 		{
-			Minion* newMinion = new Minion (sCursor.getPosition(), minionTeam);
+			Minion* newMinion = new Minion (minionTeam);
 			lMinions.push_back(*newMinion);
 			FillBar* newFillBar = new FillBar (*newMinion);
 			lFillBars.push_back(*newFillBar);
@@ -128,6 +132,10 @@ int main ()
 				screenLock = true;
 			}
 			sf::sleep(sf::seconds(.01));
+		}else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+		{
+			RangeAttack* newRangeAttack = new RangeAttack (masterYi.getPosition(), sf::Vector2f(sf::Mouse::getPosition()), "cursor.png", 1, 6);
+			lRangeAttacks.push_back(*newRangeAttack);
 		}
 		if (moving && !target.getGlobalBounds().intersects(playerBox.getGlobalBounds()))
 		{
@@ -165,13 +173,22 @@ int main ()
 		}
 
 		App.setView(game);
+
+		float viewx = game.getCenter().x - game.getSize().x/2;
+		float viewy = game.getCenter().y - game.getSize().y/2;
+
+
 		mini.setPosition(sf::Vector2f(game.getCenter().x + 200, game.getCenter().y + 100));
+
+		float mousex = sf::Mouse::getPosition(App).x + viewx;
+		float mousey = sf::Mouse::getPosition(App).y + viewy;
 
 		sCursor.setPosition(sf::Mouse::getPosition(App).x , sf::Mouse::getPosition(App).y);
 		App.clear(sf::Color(255,255,255));
 		App.draw(sMap);
 		mini.draw(App);
 		masterYi.draw(App);
+
 
 		for (unsigned int i = 0; i < lMinions.size(); i++)
 		{
@@ -184,6 +201,10 @@ int main ()
 
 			lFillBars[i].draw(App);
 			lMinions[i].draw(App);
+		}
+		for (unsigned int i = 0; i < lRangeAttacks.size(); i++)
+		{
+			lRangeAttacks[i].draw(App);
 		}
 		App.draw(sCursor);
 		App.display();
